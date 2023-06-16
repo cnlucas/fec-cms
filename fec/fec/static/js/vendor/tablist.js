@@ -33,8 +33,8 @@ function show($target, push) {
   var value = $target.attr('data-name');
 
   if (push) {
-    var query = _.extend(
-      URI.parseQuery(window.location.search),
+    var query = _.extend(helpers.sanitizeQueryParams(
+      URI.parseQuery(window.location.search)),
       _.object([[name, value]])
     );
     var search = URI('')

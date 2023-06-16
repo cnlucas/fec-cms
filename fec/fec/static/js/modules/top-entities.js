@@ -246,8 +246,8 @@ TopEntities.prototype.updatePagination = function(pagination) {
 };
 
 TopEntities.prototype.pushStateToURL = function(keyValPairsObj) {
-  var query = Object.assign(
-    URI.parseQuery(window.location.search),
+  var query = Object.assign(helpers.sanitizeQueryParams(
+    URI.parseQuery(window.location.search)),
     keyValPairsObj
   );
   var search = URI('')
