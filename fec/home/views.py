@@ -1,13 +1,14 @@
 from datetime import datetime
 from itertools import chain
 from operator import attrgetter
+from urllib import parse
 import requests
 import logging
 
 from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, render
 from wagtail.documents.models import Document
 
@@ -309,6 +310,11 @@ def serve_wagtail_doc(request, document_id, document_filename):
     We'll bounce back to the URL and let the media server serve it.
     """
     doc = get_object_or_404(Document, id=document_id)
+    parsed_url = parse.urlparse(doc.file.url)
+    # Check if the url is absolute and if the domain is ours
+    if parsed_url.netloc != '':
+        if parsed_url.netloc != 'https://fec.gov'():
+            raise HttpResponseBadRequest("Invalid URL")
     return HttpResponseRedirect(doc.file.url)
 
 
